@@ -1,5 +1,8 @@
+import numpy as np
+
+
 def inferior(row):
-    ''' Maps dur_des to left time in censoring interval.
+    ''' Maps dur_des, by row, to left time in censoring interval.
 
     Args:
         dur_des (integer): Values from 1-6
@@ -17,15 +20,10 @@ def inferior(row):
     elif row['dur_des'] == 4:
         inferior = 6
     elif row['dur_des'] == 5:
-        inferior = 12        
+        inferior = 12
     else:
         inferior = -1
     return inferior
-
-
-
-
-
 
 
 def superior(row):
@@ -38,57 +36,69 @@ def superior(row):
     elif row['dur_des'] == 4:
         val = 12
     elif row['dur_des'] == 5:
-        val = 99  
+        val = 99
     else:
         val = -1
     return val
 
-def imp_med(row):
-    if row['dur_des'] == 1:
-        val = 0.5
-    elif row['dur_des'] == 2:
-        val = 1.5
-    elif row['dur_des'] == 3:
-        val = 3
-    elif row['dur_des'] == 4:
-        val = 6
-    elif row['dur_des'] == 5:
-        val = 12  
+
+def parentesco(row):
+    ''' Maps par_c, by row, to household relaionships of interest.
+
+    Args:
+        par_c (integer): see Instructivo de Codificación de Parenztecos (2021) of INEGI.
+
+    Returns: 
+        parentesco_(String): parentesgo.
+    '''
+
+    if row['par_c'] == 101:
+        parentesco_ = 'jefe'
+    elif ((row['par_c'] == 201) | (row['par_c'] == 202) | (row['par_c'] == 203)):
+        parentesco_ = 'espo'
+    elif ((
+        row['par_c'] == 301) | (row['par_c'] == 302) | (
+        row['par_c'] == 303) | (row['par_c'] == 304) | (
+        row['par_c'] == 408) | (row['par_c'] == 409
+        )):
+        parentesco_ = 'desc' 
     else:
-        val = -1
-    return val
+        parentesco_ = np.nan
+    return parentesco_
+
 
 def macro_region(row):
-    #centro
+    # centro
     if row['ent'] == 9 or row['ent'] == 15 or row['ent'] == 13 or row['ent'] == 17 or row['ent'] == 21 or row['ent'] == 22 or row['ent'] == 29:
         val = 0
-    #centro-occidente
+    # centro-occidente
     elif row['ent'] == 6 or row['ent'] == 11 or row['ent'] == 14 or row['ent'] == 16 or row['ent'] == 18:
-        val = 1 
-    #centro-norte
+        val = 1
+    # centro-norte
     elif row['ent'] == 1 or row['ent'] == 24 or row['ent'] == 32:
-        val = 2   
+        val = 2
     # sur
     elif row['ent'] == 7 or row['ent'] == 12 or row['ent'] == 20:
-        val = 3           
+        val = 3
     # este
     elif row['ent'] == 30 or row['ent'] == 27:
-        val = 4   
+        val = 4
     # península
     elif row['ent'] == 4 or row['ent'] == 23 or row['ent'] == 31:
-        val = 5   
+        val = 5
     # noreste
     elif row['ent'] == 19 or row['ent'] == 28:
-        val = 6          
+        val = 6
     # noroeste
     elif row['ent'] == 2 or row['ent'] == 3 or row['ent'] == 25 or row['ent'] == 26:
-        val = 7             
+        val = 7
     # norte
     elif row['ent'] == 5 or row['ent'] == 8 or row['ent'] == 10:
-        val = 8            
+        val = 8
     else:
         val = -1
     return (val)
+
 
 def genero(row):
     if row['sex'] == '1':
@@ -99,8 +109,9 @@ def genero(row):
         val = -1
     return val
 
+
 def etapa_vida(row):
-    if row['eda']  < 25:
+    if row['eda'] < 25:
         val = 0
     elif (row['eda'] >= 25) & (row['eda'] < 45):
         val = 1
@@ -111,6 +122,7 @@ def etapa_vida(row):
     else:
         val = -1
     return val
+
 
 def chamacos(row):
     if row['n_hij'] == '0':
@@ -132,16 +144,17 @@ def chamacos(row):
     elif row['n_hij'] == '8':
         val = 8
     elif row['n_hij'] == '9':
-        val = 9    
+        val = 9
     elif row['n_hij'] == '10':
-        val = 10     
+        val = 10
     elif row['n_hij'] == '11':
-        val = 11           
+        val = 11
     elif row['n_hij'] == '12':
         val = 12
     else:
         val = -1
     return val
+
 
 def ant_lab(row):
     if row['d_ant_lab'] == 1:
@@ -152,18 +165,20 @@ def ant_lab(row):
         val = -1
     return val
 
+
 def niv_ed(row):
     if row['cs_p13_1'] == '1' or row['cs_p13_1'] == '2' or row['cs_p13_1'] == '3':
         val = 0
     elif row['cs_p13_1'] == '4' or row['cs_p13_1'] == '5':
         val = 1
-    elif row['cs_p13_1'] == '6' or row['cs_p13_1'] == '7': 
+    elif row['cs_p13_1'] == '6' or row['cs_p13_1'] == '7':
         val = 2
     elif row['cs_p13_1'] == '8' or row['cs_p13_1'] == '9':
         val = 3
     else:
         val = 100
     return val
+
 
 def edad(row):
     if row['eda'] >= 15 or row['eda'] == '2' or row['eda'] == '3':
