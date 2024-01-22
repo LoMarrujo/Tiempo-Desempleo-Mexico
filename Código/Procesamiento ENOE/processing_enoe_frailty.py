@@ -2,13 +2,13 @@ import numpy as np
 
 
 def inferior(row):
-    ''' Maps dur_des, by row, to left time in censoring interval.
+    '''Maps dur_des, by row, to left time in censoring interval.
 
     Args:
         dur_des (integer): Values from 1-6
 
     Returns: 
-        inferior: left time in censoring interval.
+        inferior (integer): left time in censoring interval.
     '''
 
     if row['dur_des'] == 1:
@@ -27,6 +27,15 @@ def inferior(row):
 
 
 def superior(row):
+    '''Maps dur_des, by row, to right time in censoring interval.
+
+    Args:
+        dur_des (integer): Values from 1-6
+
+    Returns: 
+        inferior (integer): right time in censoring interval.
+    '''
+
     if row['dur_des'] == 1:
         val = 1
     elif row['dur_des'] == 2:
@@ -46,10 +55,10 @@ def parentesco(row):
     ''' Maps par_c, by row, to household relaionships of interest.
 
     Args:
-        par_c (integer): see Instructivo de Codificación de Parenztecos (2021) of INEGI.
+        par_c (integer): see Instructivo de Codificación de Parentescos (2021) of INEGI.
 
     Returns: 
-        parentesco_(String): parentesgo.
+        parentesco (string): parentesco.
     '''
 
     if row['par_c'] == 101:
@@ -60,133 +69,172 @@ def parentesco(row):
         row['par_c'] == 301) | (row['par_c'] == 302) | (
         row['par_c'] == 303) | (row['par_c'] == 304) | (
         row['par_c'] == 408) | (row['par_c'] == 409
-        )):
-        parentesco_ = 'desc' 
+                                )):
+        parentesco_ = 'desc'
     else:
         parentesco_ = np.nan
     return parentesco_
 
 
 def macro_region(row):
-    # centro
-    if row['ent'] == 9 or row['ent'] == 15 or row['ent'] == 13 or row['ent'] == 17 or row['ent'] == 21 or row['ent'] == 22 or row['ent'] == 29:
-        val = 0
-    # centro-occidente
-    elif row['ent'] == 6 or row['ent'] == 11 or row['ent'] == 14 or row['ent'] == 16 or row['ent'] == 18:
-        val = 1
-    # centro-norte
-    elif row['ent'] == 1 or row['ent'] == 24 or row['ent'] == 32:
-        val = 2
-    # sur
-    elif row['ent'] == 7 or row['ent'] == 12 or row['ent'] == 20:
-        val = 3
-    # este
-    elif row['ent'] == 30 or row['ent'] == 27:
-        val = 4
-    # península
-    elif row['ent'] == 4 or row['ent'] == 23 or row['ent'] == 31:
-        val = 5
-    # noreste
-    elif row['ent'] == 19 or row['ent'] == 28:
-        val = 6
-    # noroeste
-    elif row['ent'] == 2 or row['ent'] == 3 or row['ent'] == 25 or row['ent'] == 26:
-        val = 7
-    # norte
-    elif row['ent'] == 5 or row['ent'] == 8 or row['ent'] == 10:
-        val = 8
+    '''Returns a integer label for the macro-region of the individual.
+
+    Args:
+        ent (integer): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        region_int (integer): label for macro-region.
+    '''
+    vals_region_centro = [9, 15, 13, 17, 21, 22, 29]
+    vals_region_centro_occidente = [6, 11, 14, 16, 18]
+    vals_region_centro_norte = [1, 24, 32]
+    vals_region_sur = [7, 12, 20]
+    vals_region_este = [30, 27]
+    vals_region_peninsula = [4, 23, 31]
+    vals_region_noreste = [19, 28]
+    vals_region_noroeste = [2, 3, 25, 26]
+    vals_region_norte = [5, 8, 10]
+
+    if row['ent'] in (vals_region_centro):
+        region_int = 0
+    elif row['ent'] in (vals_region_centro_occidente):
+        region_int = 1
+    elif row['ent'] in (vals_region_centro_norte):
+        region_int = 2
+    elif row['ent'] in (vals_region_sur):
+        region_int = 3
+    elif row['ent'] in (vals_region_este):
+        region_int = 4
+    elif row['ent'] in (vals_region_peninsula):
+        region_int = 5
+    elif row['ent'] in (vals_region_noreste):
+        region_int = 6
+    elif row['ent'] in (vals_region_noroeste):
+        region_int = 7
+    elif row['ent'] in (vals_region_norte):
+        region_int = 8
     else:
-        val = -1
-    return (val)
+        region_int = -1
+    return region_int
 
 
 def genero(row):
+    '''Returns a integer label for the gender of the individual.
+
+    Args:
+        sex (integer): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        gender (integer): gender label.
+    '''
     if row['sex'] == '1':
-        val = 0
+        gender = 0
     elif row['sex'] == '2':
-        val = 1
+        gender = 1
     else:
-        val = -1
-    return val
+        gender = -1
+    return gender
 
 
 def etapa_vida(row):
+    '''Returns a integer label for the life stage of the individual.
+
+    Args:
+        eda (integer): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        etapa (integer): life stage label.
+    '''
     if row['eda'] < 25:
-        val = 0
+        etapa = 0
     elif (row['eda'] >= 25) & (row['eda'] < 45):
-        val = 1
+        etapa = 1
     elif (row['eda'] >= 45) & (row['eda'] < 65):
-        val = 2
+        etapa = 2
     elif (row['eda'] >= 65):
-        val = 3
+        etapa = 3
     else:
-        val = -1
-    return val
+        etapa = -1
+    return etapa
 
 
 def chamacos(row):
+    '''Returns the number of children of the individual.
+    This function also maps non-valid integers to -1.
+
+    Args:
+        n_hij (integer): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        chamacos (integer): number of children.
+    '''
     if row['n_hij'] == '0':
-        val = 0
+        chamacos = 0
     elif row['n_hij'] == '1':
-        val = 1
+        chamacos = 1
     elif row['n_hij'] == '2':
-        val = 2
+        chamacos = 2
     elif row['n_hij'] == '3':
-        val = 3
+        chamacos = 3
     elif row['n_hij'] == '4':
-        val = 4
+        chamacos = 4
     elif row['n_hij'] == '5':
-        val = 5
+        chamacos = 5
     elif row['n_hij'] == '6':
-        val = 6
+        chamacos = 6
     elif row['n_hij'] == '7':
-        val = 7
+        chamacos = 7
     elif row['n_hij'] == '8':
-        val = 8
+        chamacos = 8
     elif row['n_hij'] == '9':
-        val = 9
+        chamacos = 9
     elif row['n_hij'] == '10':
-        val = 10
+        chamacos = 10
     elif row['n_hij'] == '11':
-        val = 11
+        chamacos = 11
     elif row['n_hij'] == '12':
-        val = 12
+        chamacos = 12
     else:
-        val = -1
-    return val
+        chamacos = -1
+    return chamacos
 
 
 def ant_lab(row):
+    '''Returns the label for work experience of the individual.
+
+    Args:
+        d_ant_lab (integer): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        ant_lab (integer): number of children.
+    '''
+
     if row['d_ant_lab'] == 1:
-        val = 0
+        ant_lab = 0
     elif row['d_ant_lab'] == 2:
-        val = 1
+        ant_lab = 1
     else:
-        val = -1
-    return val
+        ant_lab = -1
+    return ant_lab
 
 
 def niv_ed(row):
+    '''Returns the label for education level of the individual.
+
+    Args:
+        cs_p13_1 (string): see Instructivo de Codificación of INEGI for ENOE.
+
+    Returns:
+        niv_ed (integer): education level.
+    '''
     if row['cs_p13_1'] == '1' or row['cs_p13_1'] == '2' or row['cs_p13_1'] == '3':
-        val = 0
+        niv_ed = 0
     elif row['cs_p13_1'] == '4' or row['cs_p13_1'] == '5':
-        val = 1
+        niv_ed = 1
     elif row['cs_p13_1'] == '6' or row['cs_p13_1'] == '7':
-        val = 2
+        niv_ed = 2
     elif row['cs_p13_1'] == '8' or row['cs_p13_1'] == '9':
-        val = 3
+        niv_ed = 3
     else:
-        val = 100
-    return val
-
-
-def edad(row):
-    if row['eda'] >= 15 or row['eda'] == '2' or row['eda'] == '3':
-        val = 0
-    elif row['cs_p13_1'] == '4' or row['cs_p13_1'] == '5':
-        val = 1
-    elif row['cs_p13_1'] == '6' or row['cs_p13_1'] == '7' or row['cs_p13_1'] == '8' or row['cs_p13_1'] == '9':
-        val = 2
-    else:
-        val = -1
-    return v
+        niv_ed = -1
+    return niv_ed
