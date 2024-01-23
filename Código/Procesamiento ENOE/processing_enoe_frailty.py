@@ -149,10 +149,8 @@ def etapa_vida(row):
         etapa = 0
     elif (row['eda'] >= 25) & (row['eda'] < 45):
         etapa = 1
-    elif (row['eda'] >= 45) & (row['eda'] < 65):
+    elif (row['eda'] >= 45):
         etapa = 2
-    elif (row['eda'] >= 65):
-        etapa = 3
     else:
         etapa = -1
     return etapa
@@ -168,32 +166,13 @@ def chamacos(row):
     Returns:
         chamacos (integer): number of children.
     '''
-    if row['n_hij'] == '0':
-        chamacos = 0
-    elif row['n_hij'] == '1':
-        chamacos = 1
-    elif row['n_hij'] == '2':
-        chamacos = 2
-    elif row['n_hij'] == '3':
-        chamacos = 3
-    elif row['n_hij'] == '4':
-        chamacos = 4
-    elif row['n_hij'] == '5':
+    chamacos = ['00', '0', '1', '2', '3', '4']
+    chamacos_2 = ['5', '6', '7', '8', '9', '10', '11', '12']
+
+    if row['n_hij'] in chamacos:
+        chamacos = int(row['n_hij'])
+    elif row['n_hij'] in chamacos_2:
         chamacos = 5
-    elif row['n_hij'] == '6':
-        chamacos = 6
-    elif row['n_hij'] == '7':
-        chamacos = 7
-    elif row['n_hij'] == '8':
-        chamacos = 8
-    elif row['n_hij'] == '9':
-        chamacos = 9
-    elif row['n_hij'] == '10':
-        chamacos = 10
-    elif row['n_hij'] == '11':
-        chamacos = 11
-    elif row['n_hij'] == '12':
-        chamacos = 12
     else:
         chamacos = -1
     return chamacos
